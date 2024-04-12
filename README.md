@@ -10,3 +10,15 @@
 ```shell
 pip install -r requirements.txt
 ```
+
+2. 同质图节点分类方法
+```shell
+cd CLNode
+python clnode.py #数据集：cora 基线模型：GCN
+```
+
+3. 异质图节点分类方法
+```shell
+cd CLNodeH
+python clnodeh.py #数据集：DBLP 基线模型：HAN
+```
