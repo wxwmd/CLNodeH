@@ -9,19 +9,23 @@ sys.path.append("..")
 from util import training_scheduler, sort_training_nodes, setup_seed, get_noisy_data
 from GCN import GCNNet, GCNClassifier
 from early_stop import EarlyStop
-from setting import device
 
 import argparse
 
-setup_seed(0)
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 parser = argparse.ArgumentParser(description="program description")
-parser.add_argument('--percent', default=1)
+parser.add_argument('--noise_percent', type=float, default=10)
 parser.add_argument('--scheduler', default='geom')
+parser.add_argument('--seed', type=int, default=0)
 args = parser.parse_args()
 
-percent = float(args.percent) / 100
+percent = args.noise_percent / 100
 scheduler = args.scheduler
+seed = args.seed
+
+setup_seed(seed)
 
 NUM_EPOCHS = 500
 PATIENCE = 50
@@ -31,7 +35,7 @@ data = dataset[0].to(device)
 
 data.num_classes = 7
 
-data = get_noisy_data(data, 0.1)
+data = get_noisy_data(data, percent)
 
 
 # ---------------------CLNode------------------------------

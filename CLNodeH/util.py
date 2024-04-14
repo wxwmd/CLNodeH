@@ -8,7 +8,8 @@ import torch.nn.functional as F
 from sklearn.metrics import f1_score
 from torch_geometric.datasets import HGBDataset
 from torch_geometric.data.hetero_data import HeteroData
-from config import device
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
 # neighborhood-based difficulty measurer

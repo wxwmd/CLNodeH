@@ -1,5 +1,5 @@
 # 峰值显存占有：20G
-
+import argparse
 import copy
 
 import torch
@@ -11,11 +11,20 @@ from early_stop import EarlyStop
 from HAN import HAN
 from util import sort_training_nodes, training_scheduler, setup_seed, preprocessingHGBdata, test, add_noise
 
-setup_seed(5)
+parser = argparse.ArgumentParser(description="program description")
+parser.add_argument('--noise_percent', type=float, default=10)
+parser.add_argument('--scheduler', default='geom')
+parser.add_argument('--seed', type=int, default=0)
+args = parser.parse_args()
+
+percent = args.noise_percent / 100
+scheduler = args.scheduler
+seed = args.seed
+
+setup_seed(seed)
 
 NUM_EPOCHS = 500
 PATIENCE = 50
-scheduler = 'geom'
 
 metapaths = [[('author', 'paper'), ('paper', 'author')],
              [('author', 'paper'), ('paper', 'conference'), ('conference', 'paper'), ('paper', 'author')],
@@ -25,7 +34,7 @@ dataset = HGBDataset('./data', 'dblp')
 data = dataset[0]
 node_index = 0
 preprocessingHGBdata(data, node_index, 800, 400, 2000)
-data = add_noise(data, node_index, 0.3)
+data = add_noise(data, node_index, percent)
 
 data_m = copy.deepcopy(data)
 data = T.AddMetaPaths(metapaths, weighted=True, drop_orig_edge_types=True, drop_unconnected_node_types=True)(data)

@@ -6,7 +6,8 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 from torch_geometric.utils import add_self_loops
-from setting import device
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
 # neighborhood-based difficulty measurer

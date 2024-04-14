@@ -1,8 +1,17 @@
 import torch
 import torch.nn.functional as F
+from torch import nn
 from torch_geometric.nn import GCNConv
 
-from MLP import MLP
+class MLP(torch.nn.Module):
+    def __init__(self, input_num, output_num):
+        super(MLP, self).__init__()
+        self.layer = nn.Linear(input_num, output_num)
+
+    def forward(self, x):
+        x = self.layer(x)
+        x = F.dropout(x, training=self.training)
+        return F.log_softmax(x, dim=1)
 
 
 class GCNNet(torch.nn.Module):
